@@ -6,7 +6,7 @@ import json
 
 API_TOKEN = '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'
 
-repo = GitHub( owner='chaoss', repository='grimoirelab-perceval',  api_token=[API_TOKEN], sleep_for_rate=True, sleep_time=300)
+repo = GitHub( owner='chaoss', repository='grimoirelab-perceval',  api_token=[API_TOKEN], sleep_for_rate=True, sleep_time=200)
 
 user = { }
 issues_count = 0
