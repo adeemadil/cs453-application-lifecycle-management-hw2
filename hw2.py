@@ -6,7 +6,7 @@ import json
 
 API_TOKEN = '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'
 
-repo = GitHub( owner='chaoss', repository='grimoirelab-perceval',  api_token=[API_TOKEN], sleep_for_rate=True, sleep_time=200)
+repo = GitHub( owner='home-assistant', repository='frontend',  api_token=[API_TOKEN], sleep_for_rate=True, sleep_time=200)
 
 user = { }
 issues_count = 0
@@ -118,4 +118,4 @@ print("Average day of resolution for issues without an assignee is " + str( int(
 print('--------Part 6--------')
 print("No of closed issues that had at least one assignee is " + str(closed_issues_atleast_one))
 # print( closed_issues_atleast_one_time)
-print("Average day of resolution for issues without atlaest one assignee is " + str( int(sum(closed_issues_atleast_one_time)/len(closed_issues_atleast_one_time))))
+print("Average day of resolution for issues with atleast one assignee is " + str( int(sum(closed_issues_atleast_one_time)/len(closed_issues_atleast_one_time))))
