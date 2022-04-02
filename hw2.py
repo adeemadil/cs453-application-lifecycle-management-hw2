@@ -6,19 +6,19 @@ import json
 
 API_TOKEN = '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'
 
-repo = GitHub( owner='osamatanveer', repository='test',  api_token=[API_TOKEN], sleep_for_rate=True, sleep_time=300)
+repo = GitHub( owner='home-assistant', repository='frontend',  api_token=[API_TOKEN], sleep_for_rate=True, sleep_time=200)
 
 user = { }
-usersList = []
 issues_count = 0
 open_issues = 0
 unopened_issues = 0
 closed_issues_unresolved = 0
 date_creation = None
+date_closed = None
 recent_days_issue_count = 0
-closed_issues_unresolved_time = None
+closed_issues_unresolved_time = []
 closed_issues_atleast_one = 0
-closed_issues_atleast_one_time = None
+closed_issues_atleast_one_time = []
 creation_date_first_issue = None
 creation_date_last_issue = None
 flag_first_issue = False
@@ -55,13 +55,19 @@ for issue in repo.fetch():
         
         if( issue["data"]["state"] != "open"):
             unopened_issues = unopened_issues + 1
+            date_closed = dateutil.parser.parse( str(issue["data"]["closed_at"]))
 
-            if( issue["data"]):
-                pass
+            if "assignee" not in issue["data"] or len( issue["data"]["assignees"]) == 0:
+                closed_issues_unresolved = closed_issues_unresolved + 1
+                closed_issues_unresolved_time.append( (date_closed - date_creation).days)
+
+            if "assignee" in issue["data"] and len( issue["data"]["assignees"]) != 0:
+                closed_issues_atleast_one = closed_issues_atleast_one + 1
+                closed_issues_atleast_one_time.append( (date_closed - date_creation).days)
 
         if( issue["data"]["state"] == "open"):
             open_issues = open_issues + 1
-            if( (date_creation-date_today).days < 30):
+            if( (date_creation - date_today).days < 30):
                 recent_days_issue_count = recent_days_issue_count + 1
         
     
@@ -82,7 +88,7 @@ if( recent_days_issue_count > 5):
     print('It is still active, it has ' + str(recent_days_issue_count) + ' issues opened in the last 30 days')
 else:
     print('It not active, it has only ' + str(recent_days_issue_count) + ' issues opened in the last 30 days')
-    
+
 print('It has ' + str(issues_count) + ' issues')
 print('It has ' + str(len(user)) + ' users')
 # print(user)
@@ -92,15 +98,24 @@ print('It has ' + str(open_issues) + ' open issues')
 print('It has ' + str(unopened_issues) + ' closed issues')
 
 print('--------Part 4--------')
+sorted_descending_users = sorted(user.items(), key=lambda x: x[1], reverse=True)
 print("Top 5 users: ")
-# for user in topUsersList:
+top_count = 0
+for x in sorted_descending_users:
+    top_count= top_count + 1
+    if( top_count <= 5):
+        print(x[0], x[1])
+    else:
+        break
 #     print( user["name"] + "     " + user[])
 
 
 print('--------Part 5--------')
 print("No of closed issues that did not have any assignee is " + str(closed_issues_unresolved))
-print("Average day of resolution for issues without an assignee is " + str(closed_issues_unresolved_time))
+# print( closed_issues_unresolved_time)
+print("Average day of resolution for issues without an assignee is " + str( int(sum(closed_issues_unresolved_time)/len(closed_issues_atleast_one_time))))
 
 print('--------Part 6--------')
 print("No of closed issues that had at least one assignee is " + str(closed_issues_atleast_one))
-print("Average day of resolution for issues without atlaest one assignee is " + str(closed_issues_atleast_one_time))
+# print( closed_issues_atleast_one_time)
+print("Average day of resolution for issues with atleast one assignee is " + str( int(sum(closed_issues_atleast_one_time)/len(closed_issues_atleast_one_time))))
