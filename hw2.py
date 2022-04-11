@@ -4,7 +4,6 @@ import datetime
 import dateutil.parser
 import json
 
-API_TOKEN = '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'
 
 repo = GitHub( owner='home-assistant', repository='frontend',  api_token=[API_TOKEN], sleep_for_rate=True, sleep_time=200)
 
